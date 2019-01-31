@@ -24,8 +24,20 @@ android {
         }
     }
 
+    flavorDimensions "default"
+
+    productFlavors {
+        dev {
+            applicationIdSuffix ".debug"
+            dimension "default"
+        }
+        rs {
+            dimension "default"
+        }
+    }
+
     signingConfigs {
-        def keystoreFile= "local.properties"
+        def keystoreFile = "local.properties"
         config {
             Properties prop = new Properties()
             prop.load(new FileInputStream(keystoreFile))
@@ -38,6 +50,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.config
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled true
             shrinkResources true
@@ -46,9 +63,31 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    dexOptions {
-        incremental true
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            // 重命名产出的apk文件
+            File outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def prod = variant.productFlavors[0]
+                if (variant.buildType.name == "release") {
+                    File localPropertiesFile = project.rootProject.file('local.properties')
+                    if (localPropertiesFile.exists()) {
+                        Properties tempProp = new Properties()
+                        InputStream inputStream = localPropertiesFile.newDataInputStream()
+                        tempProp.load(inputStream)
+                        if (tempProp.containsKey("apk.release.generate.dir")) {
+                            variant.getPackageApplication().outputDirectory = new File(tempProp["apk.release.generate.dir"])
+                        }
+                    }
+                    def time = new java.text.SimpleDateFormat("yyMMddHHmm").format(new Date())
+                    outputFileName = "fs-${prod.name}-${defaultConfig.versionName}-${time}-release.apk".toLowerCase()
+                } else {
+                    outputFileName = "fs-${prod.name}-${defaultConfig.versionName}-debug.apk".toLowerCase()
+                }
+            }
+        }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

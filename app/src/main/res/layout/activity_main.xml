@@ -31,7 +31,7 @@
 
         <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edit_file_extension"
-                android:hint="输入文件扩展名,以“,”分割"
+                android:hint="输入文件扩展名,以“,”分割,如 apk,txt"
                 android:gravity="center"
                 android:singleLine="true"
                 android:padding="@dimen/dp10"

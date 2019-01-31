@@ -68,6 +68,8 @@ class MainActivity : BaseActivity() {
                     searchFile()
                     true
                 } else {
+                    fileList.clear()
+                    fileAdapter.notifyDataSetChanged()
                     false
                 }
             } else {
@@ -77,6 +79,9 @@ class MainActivity : BaseActivity() {
     }
 
     private fun searchFile() {
+        fileList.clear()
+        fileAdapter.notifyDataSetChanged()
+        fileSelectIndexList.clear()
         val ext = edit_file_extension.text.toString()
         if (ext.isNullOrEmpty()) {
             return
@@ -149,12 +154,15 @@ class MainActivity : BaseActivity() {
                 }
             }
             R.id.item_select_all -> {
-                if (fileSelectIndexList.isNotEmpty()) {
+                if (fileSelectIndexList.size == fileList.size) {
                     fileSelectIndexList.clear()
                 } else {
+                    if (fileSelectIndexList.isNotEmpty()) {
+                        fileSelectIndexList.clear()
+                    }
                     fileSelectIndexList.addAll(0..fileList.lastIndex)
+                    fileSelectIndexList.sort()
                 }
-                fileSelectIndexList.sort()
                 fileAdapter.notifyDataSetChanged()
             }
         }
