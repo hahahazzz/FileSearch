@@ -15,8 +15,8 @@ android {
         applicationId "com.dmh.filesearch"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 1000000
+        versionName "1.0.0.0"
         resConfigs 'zh'
         ndk {
             //设置支持的SO库架构
