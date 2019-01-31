@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FileSearch</string>
+    <string name="appbar_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
+</resources>
