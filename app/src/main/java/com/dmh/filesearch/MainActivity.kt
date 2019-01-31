@@ -63,8 +63,13 @@ class MainActivity : BaseActivity() {
                 }))
         edit_file_extension.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_DONE) {
-                searchFile()
-                true
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    searchFile()
+                    true
+                } else {
+                    false
+                }
             } else {
                 false
             }
